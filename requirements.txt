@@ -29,7 +29,7 @@ beautifulsoup4==4.12.3
 black==25.1.0
 bleach==5.0.1
 blinker==1.8.2
-blis==0.7.11
+blis==1.3.0
 boto==2.49.0
 boto3==1.37.17
 botocore==1.37.17
@@ -93,13 +93,15 @@ executing==2.2.0
 expiringdict==1.2.2
 Faker==37.0.2
 fastapi==0.115.6
-fastapi-cli==0.0.7
 fastjsonschema==2.21.1
 ffmpy==0.5.0
 filelock==3.17.0
 fire==0.7.0
 Flask==3.0.3
 flask-cors==6.0.1
+Flask-Login==0.6.3
+Flask-SQLAlchemy==3.1.1
+Flask-WTF==1.2.2
 flatbuffers==25.2.10
 fonttools==4.56.0
 fqdn==1.5.1
@@ -122,11 +124,13 @@ google-resumable-media==2.7.2
 googleapis-common-protos==1.69.2
 gradio==5.24.0
 gradio_client==1.8.0
+greenlet==3.2.3
 groovy==0.1.2
 groq==0.28.0
 grpc-google-iam-v1==0.14.2
 grpcio==1.71.0
 grpcio-status==1.71.0
+gunicorn==23.0.0
 h11==0.14.0
 h5py==3.13.0
 httpcore==1.0.7
@@ -331,9 +335,10 @@ six==1.17.0
 smart-open==6.4.0
 sniffio==1.3.1
 soupsieve==2.5
-spacy==3.7.4
+spacy==3.8.7
 spacy-legacy==3.0.12
 spacy-loggers==1.0.5
+SQLAlchemy==2.0.41
 sqlparse==0.5.3
 srsly==2.4.8
 stack-data==0.6.3
@@ -348,7 +353,7 @@ tensorflow-intel==2.16.1
 termcolor==3.0.1
 terminado==0.18.1
 tf_keras==2.19.0
-thinc==8.2.3
+thinc==8.3.6
 threadpoolctl==3.6.0
 tifffile==2025.2.18
 tinycss2==1.1.1
@@ -361,6 +366,7 @@ tornado==6.4.2
 tqdm==4.66.4
 traitlets==5.14.3
 transformers==4.51.3
+typer==0.9.0
 types-python-dateutil==2.9.0.20241206
 typing_extensions==4.13.2
 tzdata==2025.1
@@ -387,6 +393,7 @@ wheel==0.45.1
 widgetsnbextension==4.0.14
 wkhtmltopdf==0.2
 wrapt==1.17.2
+WTForms==3.2.1
 xlrd==1.2.0
 XlsxWriter==3.0.2
 xlwt==1.3.0
