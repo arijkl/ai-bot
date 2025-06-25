@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings | AI Helper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='settings.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+      body.fade-out {
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      body.fade-in {
+        opacity: 1;
+        transition: opacity 0.4s ease;
+      }
+    </style>
+  </head>
+  <body class="fade-in">
+    <div id="page-bg"></div>
+
+    <div id="sidebar">
+      <h2><ion-icon name="settings-outline"></ion-icon> AI Helper</h2>
+      <ul>
+        <li><a href="{{url_for('home')}}" class="nav-link"><ion-icon name="home-outline"></ion-icon> Home</a></li>
+        <li><a href="{{url_for('chat')}}" class="nav-link"><ion-icon name="chatbubbles-outline"></ion-icon> Chat</a></li>
+        <li><a href="{{url_for('login')}}" class="nav-link"><ion-icon name="person-add-outline"></ion-icon> Signup</a></li>
+        <li><a href="{{url_for('about')}}" class="nav-link"><ion-icon name="information-circle-outline"></ion-icon> About</a></li>
+      </ul>
+    </div>
+
+    <div id="main-container">
+      <button id="toggle-btn" aria-label="Toggle sidebar"><ion-icon name="menu-outline"></ion-icon></button>
+
+      <section class="hero">
+        <h1><ion-icon name="sliders-outline"></ion-icon> Welcome to Your AI Settings</h1>
+        <p>Control your experience. Tailor it. Own it.</p>
+      </section>
+
+      <div class="settings-container">
+        <div class="setting">
+          <label for="darkModeToggle"><ion-icon name="moon-outline"></ion-icon> Dark Mode</label>
+          <input type="checkbox" id="darkModeToggle" />
+        </div>
+        
+        <div class="setting">
+          <label for="voiceToggle"><ion-icon name="mic-outline"></ion-icon> Voice Assistant</label>
+          <input type="checkbox" id="voiceToggle" />
+        </div>
+
+        <div class="setting">
+          <label for="chatStyle"><ion-icon name="chatbox-ellipses-outline"></ion-icon> Chat Style</label>
+          <select id="chatStyle">
+            <option value="bubble">Messenger</option>
+            <option value="classic">Classic</option>
+          </select>
+        </div>
+
+        <div class="setting">
+          <label for="fontSize"><ion-icon name="text-outline"></ion-icon> Font Size</label>
+          <select id="fontSize">
+            <option value="small">Small</option>
+            <option value="medium" selected>Medium</option>
+            <option value="large">Large</option>
+          </select>
+        </div>
+
+        <div class="setting">
+          <label for="countrySelect"><ion-icon name="globe-outline"></ion-icon> Country</label>
+          <select id="countrySelect">
+            <option value="us">United States</option>
+            <option value="fr">France</option>
+            <option value="tn">Tunisia</option>
+            <option value="de">Germany</option>
+            <option value="jp">Japan</option>
+          </select>
+        </div>
+
+        <div class="setting">
+          <label for="languageSelect"><ion-icon name="language-outline"></ion-icon> Language</label>
+          <select id="languageSelect">
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="ar">العربية</option>
+            <option value="de">Deutsch</option>
+            <option value="ja">日本語</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="clear-btn" onclick="clearHistory()"><ion-icon name="trash-outline"></ion-icon> Clear All History</button>
+    </div>
+
+    <div class="stars"></div>
+
+    <script>
+      const toggleBtn = document.getElementById('toggle-btn');
+      const sidebar = document.getElementById('sidebar');
+
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+        document.getElementById('main-container').classList.toggle('pushed');
+      });
+
+      function clearHistory() {
+        alert('Chat history cleared (placeholder).');
+      }
+
+      // Smooth page transitions for nav links
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = this.getAttribute('href');
+          document.body.classList.remove('fade-in');
+          document.body.classList.add('fade-out');
+          setTimeout(() => {
+            window.location.href = target;
+          }, 400);
+        });
+      });
+      
+    </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const darkModeToggle = document.getElementById("darkModeToggle");
+
+    // Load previously saved theme
+    if (localStorage.getItem("theme") === "light") {
+      document.body.classList.add("light-mode");
+      darkModeToggle.checked = false;
+    } else {
+      darkModeToggle.checked = true;
+    }
+
+    darkModeToggle.addEventListener("change", () => {
+      const isDark = darkModeToggle.checked;
+
+      if (isDark) {
+        document.body.classList.remove("light-mode");
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.body.classList.add("light-mode");
+        localStorage.setItem("theme", "light");
+      }
+    });
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.getElementById("darkModeToggle");
+
+    // Load saved theme
+    if (localStorage.getItem("theme") === "light") {
+      document.body.classList.add("light-mode");
+      toggle.checked = false;
+    } else {
+      toggle.checked = true;
+    }
+
+    toggle.addEventListener("change", () => {
+      if (toggle.checked) {
+        document.body.classList.remove("light-mode");
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.body.classList.add("light-mode");
+        localStorage.setItem("theme", "light");
+      }
+    });
+  });
+</script>
+
+
+  </body>
+</html>

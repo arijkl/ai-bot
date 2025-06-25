@@ -1,0 +1,140 @@
+@font-face {
+    font-family: 'chineserock';
+    src: url(chineserock/chinese\ rocks\ rg.otf) format('opentype');
+}
+
+body {
+  background-image: url(istockphoto-1355531876-612x612.jpg);
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  color: #f0f0f0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
+  padding: 1rem 2rem;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.navbar a {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 30px;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: 600;
+  transition: background-color 0.4s ease, color 0.4s ease, transform 0.3s ease;
+}
+
+.navbar a:hover {
+  background: #fff;
+  color: #000;
+  transform: scale(1.1);
+}
+
+.navbar .logo {
+  font-family: 'chineserock', cursive;
+  font-size: 2.2rem;
+  letter-spacing: 1.5px;
+  color: #fff;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 2rem 6rem;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.spline-box iframe {
+  width: 100%;
+  max-width: 800px;
+  height: 450px;
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  margin-bottom: 3rem;
+  border: none;
+}
+
+.welcome {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2rem 3rem;
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.welcome h1 {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.welcome p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #ddd;
+}
+
+.start-btn {
+  display: inline-block;
+  padding: 16px 36px;
+  background: #4caf50;
+  color: #fff;
+  font-size: 1.25rem;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 6px 12px rgba(76, 175, 80, 0.6);
+}
+
+.start-btn:hover {
+  background: #66bb6a;
+  transform: scale(1.1);
+  box-shadow: 0 8px 18px rgba(102, 187, 106, 0.9);
+}
+
+/* Fade overlay styles (keep as is) */
+.fade-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: black;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+.fade-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+body.fade-out {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+body.fade-in {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}

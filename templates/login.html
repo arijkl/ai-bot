@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🔥 Glowing Login / Sign Up 🔥</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 50%, #0f0c29 0%, #302b63 40%, #24243e 100%);
+      background-size: 300% 300%;
+      animation: bgFlow 15s ease infinite;
+      position: relative;
+    }
+
+    @keyframes bgFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    canvas#particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .mouse-light {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%);
+      border-radius: 50%;
+      mix-blend-mode: screen;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+    }
+
+    .click-effect {
+      position: fixed;
+      border-radius: 50%;
+      background: radial-gradient(circle,rgba(255, 255, 255, 0.5) 0%, transparent 80%);
+      pointer-events: none;
+      z-index: 5;
+      animation: clickAnim 0.6s ease-out forwards;
+    }
+
+    @keyframes clickAnim {
+      0% {
+        width: 0;
+        height: 0;
+        opacity: 0.8;
+      }
+      100% {
+        width: 200px;
+        height: 200px;
+        opacity: 0;
+      }
+    }
+
+    .wrapper {
+      position: relative;
+      width: 400px;
+      margin: auto;
+      top: 20%;
+      transform: translateY(-20%);
+      z-index: 2;
+      
+    }
+
+    .form-container {
+      position: relative;
+      height: 100%;
+    }
+
+    .form-box {
+      position: absolute;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      transform: scale(1);
+      opacity: 1;
+      left: 0;
+      top: 0;
+    }
+
+    .form-box.hidden {
+      transform: scale(0.95) rotateY(180deg);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .form-box h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #fff;
+      text-shadow: 0 0 10px #6a11cb;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px 10px;
+      border: none;
+      outline: none;
+      border-bottom: 2px solid #777;
+      background: transparent;
+      font-size: 16px;
+      color: #fff;
+      transition: border-color 0.3s ease;
+    }
+
+    .input-group input:focus {
+      border-color: #6a82fb;
+    }
+
+    .input-group label {
+      position: absolute;
+      left: 10px;
+      top: 16px;
+      font-size: 14px;
+      color: #aaa;
+      transition: 0.3s ease;
+      pointer-events: none;
+    }
+
+    .input-group input:focus ~ label,
+    .input-group input:valid ~ label {
+      top: -10px;
+      font-size: 12px;
+      color: #84fab0;
+    }
+
+    .form-box button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(to right, #ff6ec4, #7873f5);
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 20px #ff6ec4;
+      transition: all 0.4s ease;
+    }
+
+    .form-box button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      box-shadow: 0 0 30px #6a11cb;
+    }
+
+    .toggle-form {
+      text-align: center;
+      margin-top: 15px;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .toggle-form a {
+      color: #8fd3f4;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    canvas#trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.mini-nav {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+  display: flex;
+  gap: 30px;
+  padding: 10px 25px;
+  backdrop-filter: blur(10px);
+}
+
+.mini-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.mini-nav a:hover {
+  color: #84fab0;
+}
+
+.fade-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: black;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+.fade-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+  body.fade-out {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  body.fade-in {
+    opacity: 1;
+    transition: opacity 0.4s ease;
+  }
+
+  </style>
+</head>
+<body>
+  <nav class="mini-nav">
+  <a href="{{url_for('home')}}">Home</a>
+  <a href="{{url_for('chat')}}">Chat</a>
+  <a href="{{url_for('settings')}}" class="nav-link">Settings</a>
+  <a href="{{url_for('about')}}">About</a>
+
+</nav>
+  <canvas id="particles"></canvas>
+  <div class="mouse-light" id="mouseLight"></div>
+  <div class="wrapper" >
+    <div class="form-container">
+      <div class="form-box" data-tilt="wl-change transf" id="loginForm">
+        <h2>Welcome Back!</h2>
+        <div class="input-group">
+          <input type="text" required />
+          <label>Username</label>
+        </div>
+        <div class="input-group">
+          <input type="password" required />
+          <label>Password</label>
+        </div>
+        <button type="button">Login</button>
+        <div class="toggle-form">Don't have an account? <a onclick="toggleForms()">Sign up</a></div>
+      </div>
+  
+
+
+      <div class="form-box hidden" id="signupForm">
+        <h2>Create Account</h2>
+        <div class="input-group">
+          <input type="text" required />
+          <label>Username</label>
+        </div>
+        <div class="input-group">
+          <input type="email" required />
+          <label>Email</label>
+        </div>
+        <div class="input-group">
+          <input type="password" required />
+          <label>Password</label>
+        </div>
+        <button type="button">Sign Up</button>
+        <div class="toggle-form">Already have an account? <a onclick="toggleForms()">Login</a></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleForms() {
+      document.getElementById('loginForm').classList.toggle('hidden');
+      document.getElementById('signupForm').classList.toggle('hidden');
+    }
+
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particlesArray = [];
+    const colors = ["#ff6ec4", "#7873f5", "#84fab0", "#8fd3f4"];
+
+    class Particle {
+      constructor(x, y, dx, dy, size, color) {
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        this.size = size;
+        this.color = color;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 15;
+        ctx.fill();
+      }
+
+      update() {
+        if (this.x + this.size > canvas.width || this.x - this.size < 0) this.dx = -this.dx;
+        if (this.y + this.size > canvas.height || this.y - this.size < 0) this.dy = -this.dy;
+        this.x += this.dx;
+        this.y += this.dy;
+        this.draw();
+      }
+    }
+
+    function initParticles() {
+      particlesArray = [];
+      const numberOfParticles = (canvas.width * canvas.height) / 9000;
+      for (let i = 0; i < numberOfParticles; i++) {
+        let size = Math.random() * 2 + 1;
+        let x = Math.random() * canvas.width;
+        let y = Math.random() * canvas.height;
+        let dx = (Math.random() - 0.5) * 1;
+        let dy = (Math.random() - 0.5) * 1;
+        let color = colors[Math.floor(Math.random() * colors.length)];
+        particlesArray.push(new Particle(x, y, dx, dy, size, color));
+      }
+    }
+
+    function animateParticles() {
+      requestAnimationFrame(animateParticles);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach(p => p.update());
+    }
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles();
+    });
+
+    initParticles();
+    animateParticles();
+
+    const light = document.getElementById("mouseLight");
+    document.addEventListener("mousemove", (e) => {
+      light.style.left = `${e.clientX}px`;
+      light.style.top = `${e.clientY}px`;
+    });
+
+    document.addEventListener("click", (e) => {
+      const circle = document.createElement("div");
+      circle.classList.add("click-effect");
+      circle.style.left = `${e.clientX}px`;
+      circle.style.top = `${e.clientY}px`;
+      document.body.appendChild(circle);
+      setTimeout(() => circle.remove(), 600);
+    });
+    const trailCanvas = document.getElementById("trail");
+const trailCtx = trailCanvas.getContext("2d");
+trailCanvas.width = window.innerWidth;
+trailCanvas.height = window.innerHeight;
+
+let points = [];
+
+document.addEventListener("mousemove", e => {
+  points.push({ x: e.clientX, y: e.clientY, alpha: 1 });
+
+  if (points.length > 50) points.shift();
+});
+
+function animateTrail() {
+  requestAnimationFrame(animateTrail);
+  trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const p1 = points[i];
+    const p2 = points[i + 1];
+
+    trailCtx.beginPath();
+    trailCtx.moveTo(p1.x, p1.y);
+    trailCtx.lineTo(p2.x, p2.y);
+    trailCtx.strokeStyle = `rgba(255, 255, 255, ${p1.alpha})`;
+    trailCtx.lineWidth = 2;
+    trailCtx.stroke();
+
+    p1.alpha -= 0.02; // Fade out
+  }
+
+  points = points.filter(p => p.alpha > 0);
+}
+
+animateTrail();
+
+window.addEventListener("resize", () => {
+  trailCanvas.width = window.innerWidth;
+  trailCanvas.height = window.innerHeight;
+});
+
+  </script>
+  <canvas id="trail"></canvas>
+<script>
+  // 🔁 Toggle between Login and Signup
+  function toggleForms() {
+    document.getElementById("loginForm").classList.toggle("hidden");
+    document.getElementById("signupForm").classList.toggle("hidden");
+  }
+
+  // ✅ SIGN UP
+  async function handleSignup() {
+    const username = document.querySelector("#signupForm input[type='text']").value;
+    const email = document.querySelector("#signupForm input[type='email']").value;
+    const password = document.querySelector("#signupForm input[type='password']").value;
+
+    const response = await fetch('/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password })
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      alert(result.message);
+      toggleForms();
+    } else {
+      alert(result.error || "Signup failed");
+    }
+  }
+
+  // ✅ LOGIN
+  async function handleLogin() {
+    const username = document.querySelector("#loginForm input[type='text']").value;
+    const password = document.querySelector("#loginForm input[type='password']").value;
+
+    const response = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      alert("🎉 Login successful!");
+      // Redirect or show chatbot here
+    } else {
+      alert(result.error || "Login failed");
+    }
+  }
+
+  // 🔘 Bind login & signup buttons
+  document.querySelector("#loginForm button").addEventListener("click", handleLogin);
+  document.querySelector("#signupForm button").addEventListener("click", handleSignup);
+ 
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = this.getAttribute('href');
+      document.body.classList.remove('fade-in');
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = target;
+      }, 400);
+    });
+  });
+</script>
+<div id="page-transition" class="fade-overlay"></div>
+<body class="fade-in">
+
+</body>
+</html>

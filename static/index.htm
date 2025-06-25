@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Helper - Green & Blue Neon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <style>
+    /* Reset & base */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      scrollbar-width: thin;
+      scrollbar-color: #00ff99 #003366;
+      user-select: none;
+    }
+    *::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    *::-webkit-scrollbar-track {
+      background: #003366;
+      border-radius: 8px;
+    }
+    *::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, #00ff99, #0099ff);
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+    *::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(45deg, #0099ff, #00ff99);
+    }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #001a33, #003366);
+      color: #cceeff;
+      overflow-x: hidden;
+      min-height: 100vh;
+      background-attachment: fixed;
+      position: relative;
+      user-select: text;
+    }
+
+    /* Navbar */
+    nav.navbar {
+      background: linear-gradient(90deg, #007f5f, #0099ff);
+      padding: 0.7rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow:
+        0 0 15px #00ff99,
+        0 0 25px #0099ff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 4000;
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
+    }
+    nav.navbar .logo {
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #00ff99;
+      text-shadow:
+        0 0 10px #00ff99,
+        0 0 20px #00ff99cc;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      user-select: none;
+    }
+    nav.navbar .logo ion-icon {
+      font-size: 2rem;
+      filter: drop-shadow(0 0 8px #00ff99cc);
+    }
+    nav.navbar .menu-toggle {
+      background: transparent;
+      border: none;
+      font-size: 2rem;
+      color: #cceeff;
+      cursor: pointer;
+      display: none; /* Show on mobile */
+      user-select: none;
+    }
+    nav.navbar ul.menu-links {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      user-select: none;
+    }
+    nav.navbar ul.menu-links li a {
+      text-decoration: none;
+      color: #cceeff;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 8px;
+      transition:
+        color 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+      user-select: none;
+    }
+    nav.navbar ul.menu-links li a:hover,
+    nav.navbar ul.menu-links li a.active {
+      color: #00ff99;
+      background: rgba(0, 255, 153, 0.15);
+      box-shadow: 0 0 12px #00ff99aa;
+    }
+
+    /* Responsive navbar toggle */
+    @media (max-width: 720px) {
+      nav.navbar .menu-toggle {
+        display: block;
+      }
+      nav.navbar ul.menu-links {
+        position: fixed;
+        top: 56px;
+        left: 0;
+        right: 0;
+        background: #00294d;
+        flex-direction: column;
+        gap: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        box-shadow: 0 8px 30px #0099ffaa;
+      }
+      nav.navbar ul.menu-links.show {
+        max-height: 240px;
+      }
+      nav.navbar ul.menu-links li a {
+        padding: 1rem 1.5rem;
+        font-size: 1.3rem;
+        border-radius: 0;
+      }
+    }
+
+    /* Sidebar toggle button */
+    #sidebarToggle {
+      position: fixed;
+      top: 75px;
+      left: 20px;
+      width: 55px;
+      height: 55px;
+      background: linear-gradient(45deg, #00ff99, #0099ff);
+      border-radius: 50%;
+      border: none;
+      box-shadow:
+        0 0 18px #00ff99,
+        0 0 28px #0099ff;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    #sidebarToggle:hover {
+      box-shadow:
+        0 0 38px #00ff99,
+        0 0 48px #0099ff;
+      transform: rotate(15deg) scale(1.15);
+    }
+    #sidebarToggle ion-icon {
+      color: #001a33;
+      font-size: 2rem;
+      filter: drop-shadow(0 0 3px #001a33);
+      user-select: none;
+    }
+
+    /* Sidebar styles */
+    #sidebar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      height: calc(100vh - 56px);
+      width: 320px;
+      background: linear-gradient(135deg, #004466, #006699);
+      box-shadow: 2px 0 25px #00ff99cc;
+      backdrop-filter: blur(15px);
+      border-top-right-radius: 30px;
+      border-bottom-right-radius: 30px;
+      transform: translateX(-350px);
+      transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      z-index: 2500;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 2rem 2rem 2rem;
+      color: #ccffee;
+      font-weight: 600;
+      user-select: text;
+      overflow-y: auto;
+    }
+    #sidebar.active {
+      transform: translateX(0);
+      box-shadow:
+        4px 0 50px #00ff99ee,
+        inset 0 0 30px #0099ffbb;
+    }
+
+    #sidebar h2 {
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      font-size: 2.3rem;
+      letter-spacing: 0.2em;
+      margin-bottom: 2rem;
+      color: #00ff99;
+      text-shadow: 0 0 12px #00ff99, 0 0 30px #00ff99cc;
+      user-select: none;
+    }
+
+    #sidebar input[type="text"] {
+      padding: 0.75rem 1.5rem;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      border: none;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, #003355, #005577);
+      box-shadow: inset 0 0 15px #00ff99bb;
+      color: #ccffee;
+      font-weight: 600;
+      outline-offset: 2px;
+      transition: box-shadow 0.3s ease;
+      caret-color: #00ff99;
+      user-select: auto;
+    }
+    #sidebar input[type="text"]:focus {
+      box-shadow:
+        inset 0 0 25px #0099ffcc,
+        0 0 12px #0099ffcc;
+      color: #0099ff;
+      background: linear-gradient(135deg, #005577, #003355);
+    }
+
+    /* Chat History List */
+    #historyList {
+      list-style: none;
+      flex-grow: 1;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #00ff99 #003355;
+      margin-bottom: 2rem;
+      user-select: text;
+    }
+    #historyList li {
+      background: linear-gradient(45deg, #00ff9988, #0099ff88);
+      margin-bottom: 12px;
+      padding: 12px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow:
+        0 0 12px #00ff99cc,
+        inset 0 0 15px #0099ff88;
+      color: #002233;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      transition:
+        transform 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+        box-shadow 0.3s ease,
+        color 0.3s ease;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+    #historyList li:hover {
+      color: #00ff99;
+      box-shadow:
+        0 0 25px #00ff99ff,
+        inset 0 0 40px #0099ffff;
+      transform: scale(1.08) translateX(6px);
+      background: linear-gradient(45deg, #0099ff, #00ff99);
+    }
+    #historyList li::after {
+      content: "";
+      position: absolute;
+      top: 50%; left: 100%;
+      width: 40px; height: 40px;
+      background: radial-gradient(circle, #00ff99cc, transparent 70%);
+      transform: translate(-50%, -50%) scale(0);
+      border-radius: 50%;
+      pointer-events: none;
+      transition: transform 0.4s ease;
+      z-index: 0;
+    }
+    #historyList li:hover::after {
+      transform: translate(-150%, -50%) scale(1);
+    }
+
+    /* Collapsible category */
+    .category {
+      margin-bottom: 1.5rem;
+      user-select: none;
+    }
+    .category > h3 {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1.4rem;
+      letter-spacing: 0.1em;
+      color: #00ff99;
+      margin-bottom: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .category > h3:hover {
+      color: #0099ff;
+      text-shadow: 0 0 12px #0099ff;
+    }
+    .category > h3 ion-icon {
+      transition: transform 0.35s ease;
+    }
+    .category.collapsed > h3 ion-icon {
+      transform: rotate(-90deg);
+    }
+    .category ul {
+      list-style: none;
+      max-height: 300px;
+      overflow-y: auto;
+      transition: max-height 0.5s ease;
+      user-select: text;
+      padding-left: 15px;
+    }
+    .category.collapsed ul {
+      max-height: 0;
+      overflow: hidden;
+      padding-left: 0;
+    }
+    .category ul li {
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #0099ffcc, #00ff99cc);
+      border-radius: 25px;
+      font-weight: 600;
+      color: #001a33;
+      cursor: pointer;
+      box-shadow: inset 0 0 12px #00ff99bb;
+      transition: background 0.3s ease, color 0.3s ease;
+      user-select: none;
+    }
+    .category ul li:hover {
+      color: #fff;
+      background: linear-gradient(135deg, #00ff99dd, #0099ffdd);
+      box-shadow:
+        0 0 18px #00ff99dd,
+        inset 0 0 20px #0099ffdd;
+      transform: scale(1.05);
+    }
+
+    /* New chat button */
+    #newChatBtn {
+      padding: 1rem 2rem;
+      background: linear-gradient(45deg, #00ff99, #0099ff);
+      color: #001a33;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow:
+        0 0 25px #00ff9988,
+        inset 0 0 15px #0099ff88;
+      transition: box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+      user-select: none;
+    }
+    #newChatBtn:hover {
+      box-shadow:
+        0 0 40px #0099ffff,
+        inset 0 0 25px #00ff99ff;
+      background: linear-gradient(45deg, #0099ff, #00ff99);
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    /* Overlay */
+    #overlay {
+      position: fixed;
+      top: 56px; left: 0;
+      width: 100vw;
+      height: calc(100vh - 56px);
+      background: rgba(0, 255, 153, 0.15);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease;
+      z-index: 2400;
+    }
+    #overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Main chat container */
+    main.chat-container {
+      max-width: 900px;
+      margin: 80px auto 2rem; /* offset from navbar */
+      padding: 2rem 3rem 3rem;
+      background: linear-gradient(135deg, #003355, #004477);
+      border-radius: 40px;
+      box-shadow:
+        0 0 50px #00ff99bb,
+        inset 0 0 35px #0099ffbb;
+      backdrop-filter: blur(30px);
+      color: #ccffee;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      user-select: text;
+      position: relative;
+      z-index: 10;
+      transition: background 0.4s ease;
+    }
+    main.chat-container header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+    main.chat-container header .logo {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.2rem;
+      color: #00ff99;
+      text-shadow:
+        0 0 20px #00ff99,
+        0 0 40px #00ff99cc;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    main.chat-container header .logo ion-icon {
+      max-width: fit-content;
+      font-size: 2.4rem;
+      filter: drop-shadow(0 0 8px #00ff99cc);
+    }
+    main.chat-container header h1 {
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      font-size: 2.8rem;
+      color: #0099ff;
+      text-shadow:
+        0 0 18px #0099ff,
+        0 0 40px #0099ffbb;
+      user-select: none;
+    }
+
+    /* Chat textarea */
+    #message {
+      background: linear-gradient(135deg, #004477, #002244);
+      border-radius: 30px;
+      border: none;
+      padding: 1.3rem 2rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #00ff99;
+      box-shadow: inset 0 0 40px #00ff9977;
+      resize: none;
+      outline-offset: 2px;
+      font-family: 'Quicksand', sans-serif;
+      min-height: 130px;
+      transition: box-shadow 0.4s ease, color 0.3s ease;
+      user-select: text;
+  
+    }
+    #message::placeholder {
+      font-style: italic;
+      color: #007733aa;
+      animation: placeholderPulse 3s ease-in-out infinite;
+    }
+    #message:focus {
+      box-shadow:
+        inset 0 0 50px #0099ffcc;
+      color: #0099ff;
+      background: linear-gradient(135deg, #002244, #004477);
+    }
+    @keyframes placeholderPulse {
+       0%, 100% { opacity: 1; }
+       50% { opacity: 0.3; }
+    }
+
+    /* Response area */
+    #response {
+      
+      background: linear-gradient(135deg, #003355cc, #002244cc);
+      padding: 1.4rem 2rem;
+      border-radius: 30px;
+      box-shadow:
+        0 0 20px #00ff99cc,
+        inset 0 0 30px #0099ffbb;
+      min-height: 120px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #ccffee;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      user-select: text;
+    }
+
+    /* Buttons row */
+    .buttons-row {
+      
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      user-select: none;
+    }
+    .buttons-row button {
+      background: linear-gradient(45deg, #00ff99, #0099ff);
+      border: none;
+      border-radius: 50px;
+      padding: 0.9rem 1.8rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #001a33;
+      cursor: pointer;
+      box-shadow:
+        0 0 20px #00ff9988,
+        inset 0 0 15px #0099ff88;
+      transition:
+        box-shadow 0.3s ease,
+        background 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      user-select: none;
+      white-space: nowrap;
+      min-width: 110px;
+      justify-content: center;
+      user-select: none;
+    }
+    .buttons-row button:hover {
+      background: linear-gradient(45deg, #0099ff, #00ff99);
+      color: #fff;
+      box-shadow:
+        0 0 40px #0099ffff,
+        inset 0 0 25px #00ff99ff;
+      transform: scale(1.1);
+    }
+    .buttons-row button ion-icon {
+      font-size: 1.4rem;
+      filter: drop-shadow(0 0 6px #004477aa);
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      #sidebar {
+        width: 280px;
+      }
+      .buttons-row button {
+        flex: 1 1 100%;
+        min-width: auto;
+      }
+      main.chat-container {
+        margin: 100px 1rem 2rem;
+        padding: 1.5rem 1.5rem 2rem;
+      }
+      #sidebarToggle {
+        top: 85px;
+        width: 50px;
+        height: 50px;
+      }
+    }
+    /* Chat bubbles styling */
+.chat-bubble {
+  display: inline-block;
+  max-width: 80%;       /* Bubble max width relative to container */
+  padding: 0.8rem 1rem;
+  border-radius: 20px;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+  word-wrap: break-word;
+  white-space: normal;
+}
+.chat-bubble.user {
+  background: linear-gradient(90deg, #00ff99, #0099ff);
+  color: #001a33;
+  align-self: flex-end; /* Align user bubbles right */
+  border-bottom-left-radius: 5px;
+}
+.chat-bubble.bot {
+  background: linear-gradient(90deg, #0099ff, #00ff99);
+  color: #001a33;
+  position: relative;
+  margin-left: 450px; /* Align bot bubbles left */
+  margin-left: fixed;
+  border-bottom-right-radius: 5px;
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="logo" aria-label="Bot Buddy logo">
+      <ion-icon name="chatbubbles-outline" aria-hidden="true"></ion-icon> BOT BUDDY
+    </div>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="menu-links" aria-label="Toggle navigation menu">&#9776;</button>
+    <ul class="menu-links" id="menu-links" role="menu">
+      <li role="none"><a href="home.html" role="menuitem" tabindex="0">Home</a></li>
+      <li role="none"><a href="AI Helper.html" role="menuitem" tabindex="0" class="active">Chat</a></li>
+      <li role="none"><a href="settings.html" role="menuitem" tabindex="0">Settings</a></li>
+      <li role="none"><a href="#" role="menuitem" tabindex="0">About</a></li>
+      <li role="none"><a href="login.html" role="menuitem" tabindex="0">Signup</a></li>
+    </ul>
+  </nav>
+
+  <!-- Sidebar toggle button -->
+  <button id="sidebarToggle" aria-label="Toggle Chat History Sidebar" aria-pressed="false" title="Toggle Chat History">
+    <ion-icon name="list-outline"></ion-icon>
+  </button>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" aria-label="Chat history sidebar" role="complementary" tabindex="0">
+    <h2>Chat History</h2>
+
+    <input
+      type="text"
+      id="searchHistory"
+      placeholder="Search chats..."
+      aria-label="Search chat history"
+      autocomplete="off"
+    />
+
+    <div class="category" id="recentCategory">
+      <h3>
+        Recent Chats
+        <ion-icon name="chevron-down-outline" aria-hidden="true"></ion-icon>
+      </h3>
+      <ul>
+        <li tabindex="0">How to hack wifi?</li>
+        <li tabindex="0">Explain quantum computing</li>
+        <li tabindex="0">Help with coding errors</li>
+        <li tabindex="0">Best anime recommendations</li>
+      </ul>
+    </div>
+
+    <div class="category collapsed" id="oldCategory">
+      <h3>
+        Old Chats
+        <ion-icon name="chevron-down-outline" aria-hidden="true"></ion-icon>
+      </h3>
+      <ul>
+        <li tabindex="0">Python basics</li>
+        <li tabindex="0">Flask app setup</li>
+        <li tabindex="0">React hooks</li>
+        <li tabindex="0">JavaScript closures</li>
+      </ul>
+    </div>
+
+    <button id="newChatBtn" aria-label="Start new chat">+ New Chat</button>
+  </aside>
+
+  <!-- Overlay -->
+  <div id="overlay" tabindex="-1" aria-hidden="true"></div>
+
+  <!-- Main chat container -->
+  <main class="chat-container" role="main" aria-live="polite" aria-atomic="true">
+    <header>
+      <div class="logo" aria-label="Bot Buddy logo">
+        <ion-icon name="chatbubbles-outline" aria-hidden="true"></ion-icon> BOT BUDDY
+      </div>
+      <h1>AI Helper</h1>
+    </header>
+
+    <textarea
+      id="message"
+      placeholder="Ask me anything..."
+      aria-label="Chat input message"
+      rows="5"
+      spellcheck="true"
+    ></textarea>
+
+    <div id="response" aria-live="polite" aria-atomic="true" tabindex="0">
+      Waiting for your message...
+    </div>
+
+    <div class="buttons-row">
+      <button title="Send message" id="sendBtn" aria-label="Send chat message">
+        <ion-icon name="send-outline" aria-hidden="true"></ion-icon> Send
+      </button>
+      <button title="Toggle Dark/Light Theme" id="themeToggle" aria-label="Toggle dark/light theme">
+        <ion-icon name="moon-outline" aria-hidden="true"></ion-icon> Toggle Theme
+      </button>
+      <button title="Clear chat" id="clearBtn" aria-label="Clear chat">
+        <ion-icon name="trash-outline" aria-hidden="true"></ion-icon> Clear Chat
+      </button>
+      <button title="Save chat" id="saveBtn" aria-label="Save chat">
+        <ion-icon name="save-outline" aria-hidden="true"></ion-icon> Save Chat
+      </button>
+      <button title="Start Voice Input" id="voiceBtn" aria-label="Start voice input">
+        <ion-icon name="mic-outline" aria-hidden="true"></ion-icon> Speak
+      </button>
+    </div>
+  </main>
+
+  <script>
+    // Navbar toggle for mobile
+    const menuToggleBtn = document.querySelector('.menu-toggle');
+    const menuLinks = document.getElementById('menu-links');
+    menuToggleBtn.addEventListener('click', () => {
+      const expanded = menuToggleBtn.getAttribute('aria-expanded') === 'true';
+      menuToggleBtn.setAttribute('aria-expanded', !expanded);
+      menuLinks.classList.toggle('show');
+    });
+
+    // Sidebar toggle and overlay
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    sidebarToggle.addEventListener('click', () => {
+      const isActive = sidebar.classList.toggle('active');
+      overlay.classList.toggle('active', isActive);
+      sidebarToggle.setAttribute('aria-pressed', isActive);
+    });
+
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      sidebarToggle.setAttribute('aria-pressed', 'false');
+    });
+
+    // Collapsible categories
+    const categories = document.querySelectorAll('.category > h3');
+    categories.forEach(catHeader => {
+      catHeader.addEventListener('click', () => {
+        const parent = catHeader.parentElement;
+        parent.classList.toggle('collapsed');
+      });
+    });
+
+    // Chat search filter
+    const searchInput = document.getElementById('searchHistory');
+    searchInput.addEventListener('input', () => {
+      const filter = searchInput.value.toLowerCase();
+      document.querySelectorAll('.category ul').forEach(ul => {
+        [...ul.children].forEach(li => {
+          li.style.display = li.textContent.toLowerCase().includes(filter) ? '' : 'none';
+        });
+      });
+    });
+
+    // New Chat Button
+    document.getElementById('newChatBtn').addEventListener('click', () => {
+      alert('Starting a new chat!');
+      // Your new chat logic here
+    });
+
+    // Chat buttons functionality placeholders
+
+    
+      // Append message with styling
+      const userMsg = document.createElement('p');
+      userMsg.classList.add('chat-bubble', 'user');
+      userMsg.textContent = `You: ${message}`;
+      responseArea.appendChild(userMsg);
+      responseArea.scrollTop = responseArea.scrollHeight;
+      messageInput.value = '';
+      messageInput.focus();
+
+      // Simulate bot reply after a delay
+       const sendBtn = document.getElementById('sendBtn');
+    const messageInput = document.getElementById('message');
+    const responseArea = document.getElementById('response');
+
+    let isFirstMessage = true;
+
+    sendBtn.addEventListener('click', async () => {
+      const message = messageInput.value.trim();
+      if (!message) {
+        alert('Please enter a message before sending.');
+        return;
+      }
+
+      if (isFirstMessage) {
+        responseArea.textContent = '';
+        isFirstMessage = false;
+      }
+
+    // Theme toggle button: toggles dark mode
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      alert('Theme toggled!');
+    });
+
+    // Clear chat button: clears the response area
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      const responseArea = document.getElementById('response');
+      responseArea.innerHTML = 'Waiting for your message...';
+    });
+
+    // Save chat button: saves chat as text file
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      const responseArea = document.getElementById('response');
+      if (responseArea.textContent.trim() === '' || responseArea.textContent.includes('Waiting for your message')) {
+        alert('Nothing to save!');
+        return;
+      }
+      const blob = new Blob([responseArea.textContent], {type: 'text/plain;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'chat.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Voice input button: simple alert placeholder
+    document.getElementById('voiceBtn').addEventListener('click', () => {
+      alert('Voice input feature coming soon!');
+    });
+  </script>
+</body>
+</html>
